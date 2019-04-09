@@ -10,8 +10,8 @@ db.once('open', () => {
   console.log('Connected to the database');
 });
 
-const Schema = mongoose.Schema;
-// creates the Schema for the database
+const Schema = mongoose.Schema; // defines the mongoose schema
+// creates the Schema for the database on every user instance
 const userSchema = new Schema({
   name: {
     type: String,
@@ -52,6 +52,8 @@ const userSchema = new Schema({
 
 });
 
+// to use the schema userSchema, we need to convert it into a Model we can work with
+// model(modelName, schema)
 const User = mongoose.model('user', userSchema);
 
 module.exports = User;

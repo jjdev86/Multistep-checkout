@@ -1,16 +1,26 @@
 const express = require('express');
+
+// Middleware
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const morgan = require('morgan');
+
 mongoose.Promise = global.Promise;
 
-const users = require('./routes/users');
+// Router
+const users = require('./routes/users.js');
+
 const app = express();
 
-app.use(cors());
-app.use(express.static(`${__dirname}/../build`));
+// Logging and parsin
+app.use(morgan('dev'));
 app.use(bodyParser.json());
+app.use(cors());
 
+
+
+// moongodb connection keys
 const configFolder = require('../config/keys');
 
 mongoose.connect(configFolder.mongoURI, { useNewUrlParser: true });
@@ -21,10 +31,16 @@ mongoose.connection.once('open', () => {
 });
 
 // Use Routes
-app.use('users', users);
+app.use('/', users);
+
+// serve the static files from the build folder to the client
+app.use(express.static(`${__dirname}/../build`));
 
 const port = process.env.PORT || 4000; // process.env.PORT
 
 app.listen(port, () => console.log(`Server listening on port ${port}`));
+
+
+
 
 module.exports = app;
