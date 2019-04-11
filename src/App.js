@@ -25,40 +25,44 @@ class App extends Component {
   }
 
   handlePageChange(e) {
-    const page = e.target.name
-    if (page === 'App') {
-      this.setState({ currentPage: 'Form1' });
-    } else if (page === 'Form1') {
-      this.setState({ currentPage: 'Form2' });
-    } else {
-      this.setState({ currentPage: 'Form3' });
-    }
+    const form = e.target.id;
 
-    e.preventDefault();
+    if (this.state.currentPage === 'App') {
+      this.setState({ currentPage: 'Form1' });
+    } else if (form === 'Form1') {
+      this.setState({ currentPage: 'Form2' });
+    } else if (form === 'Form2') {
+      this.setState({ currentPage: 'Form3' });
+    } else {
+      this.setState({ currentPage: 'Summary' });
+    }
+    console.log(`${this.state.currentPage} is current page`)
   }
 
   handleSubmit(e) {
+    this.setState({ currentPage: 'Form2' });
     alert(`form ${this.state.currentPage} was submitted`);
-    e.preventDefault();
   }
 
+
   render() {
+
     const currentPageState = this.state.currentPage;
     let page;
-
     if (currentPageState === 'Form1') {
-      page = <Form1 onClick={this.handlePageChange} onSubmit={this.handleSubmit} />
+      page = <Form1 handlePageChange={this.handlePageChange} />
     } else if (currentPageState === 'Form2') {
-      page = <Form2 onClick={this.handlePageChange} />
+      page = <Form2 handlePageChange={this.handlePageChange} />
     } else if (currentPageState === 'Form3') {
-      page = <Form3 onClick={this.handlePageChange} />
-    } else {
+      page = <Form3 handlePageChange={this.handlePageChange} />
+    } else if (currentPageState === 'App') {
       page = <input type="submit" value="Checkout" name="App" onClick={this.handlePageChange} />
+    } else {
+      page = <Summary handlePageChange={this.handlePageChange} />
     }
 
     return (
       <div>
-        {/* <input type="submit" value="Checkout" name="App" onClick={this.handlePageChange} /> */}
         {page}
       </div>
     );
@@ -67,9 +71,10 @@ class App extends Component {
 
 
 function Form1(props) {
+  console.log(props, `BEFORE RETURN`)
   return (
     <div>
-      <form onSubmit={props.handleSubmit} >
+      <form id="Form1" onSubmit={props.handlePageChange} >
         <label>
           Name:
         <input type="text" name="name" />
@@ -82,7 +87,7 @@ function Form1(props) {
           Password:
         <input type="text" name="name" />
         </label>
-        <input type="submit" value="Next" name="Form1" onClick={props.handlePageChange} />
+        <input type="submit" value="Next" name="Form1" />
       </form>
     </div>
   );
@@ -91,7 +96,7 @@ function Form1(props) {
 function Form2(props) {
   return (
     <div>
-      <form>
+      <form id="Form2" onSubmit={props.handlePageChange}>
         <label>
           Address Line1:
         <input type="text" addresslineone="name" />
@@ -121,7 +126,7 @@ function Form2(props) {
 function Form3(props) {
   return (
     <div>
-      <form>
+      <form id="Form3" onSubmit={props.handlePageChange}>
         <label>
           Card number:
         <input type="text" creditcard_number="name" />
@@ -144,5 +149,13 @@ function Form3(props) {
   );
 }
 
+function Summary(props) {
+  return (
+    <div>
+      <h1>This is the end of the checkout</h1>
+      <button>Complete Order</button>
+    </div>
+  )
+}
 
 export default App;
