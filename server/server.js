@@ -21,14 +21,14 @@ app.use(cors());
 
 
 // moongodb connection keys
-const configFolder = require('../config/keys');
+// const configFolder = require('../config/keys');
 
-mongoose.connect(configFolder.mongoURI, { useNewUrlParser: true });
+// mongoose.connect(configFolder.mongoURI, { useNewUrlParser: true });
 
-mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
-mongoose.connection.once('open', () => {
-  console.log('Connected to the database');
-});
+// mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
+// mongoose.connection.once('open', () => {
+//   console.log('Connected to the database server.js');
+// });
 
 // Use Routes
 app.use('/', users);

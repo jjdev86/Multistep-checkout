@@ -1,12 +1,30 @@
-const models = require('../models/users');
-
+const User = require('../models/users');
+const db = require('../models/users');
 module.exports = {
+  create: {
+    post: (req, res) => {
+      let { name } = req.body;
+      let test = new db.User(req.body);
+
+      test.save().then(user => res.json(user));
+      // models.User.insert();//1
+      // res.end('request came in')
+    }
+  },
   formOne: {
     post: (req, res) => {
       // will need to connect to the models f1 method
       console.log(req.body, `THIS IS THE REQUREST FROM THE CLIENT`);
-      res.end('form data was submitted');
+      const id = req.body.id;
 
+      db.User.findByIdAndUpdate(id, req.body, (err, user) => {
+        if (err) {
+          return res
+            .status(500)
+            .send({ error: 'uncesssful' });
+        };
+        res.send({ sucess: 'passed' });
+      });
     }
   },
 
