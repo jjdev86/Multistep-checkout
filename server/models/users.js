@@ -4,15 +4,16 @@ const onlineDb = require('../../config/keys');
 mongoose.connect(onlineDb.mongoURI, { useNewUrlParser: true });
 
 const db = mongoose.connection;
+mongoose.Promise = global.Promise;
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {
-  console.log('Connected to the database');
+  console.log('Connected to the database inside models');
 });
 
-const Schema = mongoose.Schema; // defines the mongoose schema
+// const Schema = mongoose.Schema; // defines the mongoose schema
 // creates the Schema for the database on every user instance
-const userSchema = new Schema({
+const userSchema = new mongoose.Schema({
   name: {
     type: String,
   },
@@ -54,6 +55,9 @@ const userSchema = new Schema({
 
 // to use the schema userSchema, we need to convert it into a Model we can work with
 // model(modelName, schema)
-const User = mongoose.model('user', userSchema);
+const User = mongoose.model('User', userSchema);
 
-module.exports = User;
+module.exports = {
+  User,
+  db
+}

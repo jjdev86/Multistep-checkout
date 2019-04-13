@@ -6,6 +6,7 @@ const controller = require('../controller/users');
 // call helper functions from controller foler
 
 // Connect controller methods to their corresponding routes
+router.post('/create', controller.create.post);
 router.post('/form1', controller.formOne.post);
 router.post('/form2', controller.formTwo.post);
 router.post('/form3', controller.formThree.post);
