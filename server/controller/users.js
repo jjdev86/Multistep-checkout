@@ -19,11 +19,9 @@ module.exports = {
 
       db.User.findByIdAndUpdate(id, req.body, (err, user) => {
         if (err) {
-          return res
-            .status(500)
-            .send({ error: 'uncesssful' });
-        };
-        res.send({ sucess: 'passed' });
+          res.send(err);
+        }
+        res.send({ sucess: 'user data was updated sucessfully' });
       });
     }
   },
@@ -31,19 +29,41 @@ module.exports = {
   formTwo: {
     post: (req, res) => {
       // will need to connect to the models f2 method
-      res.end('form2 endpoint was reached');
+      const id = req.body.id;
+      console.log(req.body, `FROM FORM TWO`);
+      db.User.findByIdAndUpdate(id, req.body, (err, user) => {
+        if (err) {
+          res.send(err);
+        } else {
+          res.send({ sucess: 'user data was updated sucessfully' });
+        }
+      });
     }
   },
   formThree: {
     post: (req, res) => {
       // will need to connecto the models f2 method
-      res.end('form3 endpoint was reached');
+      const id = req.body.id;
+      db.User.findByIdAndUpdate(id, req.body, (err, user) => {
+        if (err) {
+          res.send(err);
+        } else {
+          res.send({ sucess: 'user data was updated sucessfully' });
+        }
+      });
     }
   },
   sum: {
     get: (req, res) => {
       // gets summary of all data stored in the user's record
-      res.end('summary endpoint was reached');
+      const id = req.body.id;
+      db.User.findById(id, (err, user) => {
+        if (err) {
+          res.send(err);
+        } else {
+          res.send({ user: user });
+        }
+      });
     }
   }
 }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import { AxiosProvider, Request, Get, Delete, Head, Post, Put, Patch, withAxios } from 'react-axios'
+
 import Axios from 'axios';
 class App extends Component {
   constructor(props) {
@@ -34,26 +34,8 @@ class App extends Component {
     this.setState({ [name]: value });
   }
 
-  // getId(id) {
-  //   this.id = id;
-  // }
-  componentDidMount(e, form) {
-    // You should populate data with AJAX calls in the componentDidMount lifecycle method.
-    // This is so you can use setState to update your component when the data is retrieved.
-    if (form === 'checkout') {
-      Axios({
-        method: 'post',
-        url: 'http://localhost:3000/create',
-      }).then(results => {
-        this.setState({ id: results.data._id });
-      });
-    } else {
-
-    }
-  };
-
   submit(form) {
-    const { name, email, password, id } = this.state;
+    const { id, name, email, password, addresslineone, addresslinetwo, city, state, zip_code, creditcard_number, expirationdate, cvv, billing_zipcode } = this.state;
     if (form === 'Form1') {
       Axios({
         method: 'post',
@@ -63,25 +45,52 @@ class App extends Component {
         console.log(results, `FIRST POST OF FORM`)
       })
     }
+    if (form === 'Form2') {
+      Axios({
+        method: 'post',
+        url: 'http://localhost:3000/form2',
+        data: { id, addresslineone, addresslinetwo, city, state, zip_code }
+      }).then(results => {
+        console.log(results, `SECOND POST OF FORM`)
+      });
+    }
+    if (form === 'Form3') {
+      Axios({
+        method: 'post',
+        url: 'http://localhost:3000/form3',
+        data: { id, creditcard_number, expirationdate, cvv, billing_zipcode }
+      }).then(results => {
+      });
+    }
   }
 
   handleSubmit(e) {
     const form = e.target.id;
-    const checkout = e.target.value
-
+    const complete = e.target.name;
+    debugger;
     if (form === 'checkout') {
       // call the database to create a new record
       this.setState({ currentPage: 'Form1' });
-      this.componentDidMount(e, form);
+    }
 
-    } else if (form === 'Form1') {
+    if (form === 'Form1') {
       // call to the database to store form1's information
       this.setState({ currentPage: 'Form2' });
       this.submit(form);
-    } else if (form === 'Form2') {
+    }
+
+    if (form === 'Form2') {
       this.setState({ currentPage: 'Form3' });
-    } else {
+      this.submit(form);
+    }
+
+    if (form === 'Form3') {
       this.setState({ currentPage: 'Summary' });
+      this.submit(form);
+    }
+
+    if (complete === 'Summary') {
+      this.setState({ currentPage: 'App' });
     }
   }
 
@@ -103,7 +112,7 @@ class App extends Component {
           <input type="submit" value="Checkout" name="checkout" />
         </form>
     } else {
-      page = <Summary handleSubmit={this.handleSubmit} id={this.id} />
+      page = <Summary handleSubmit={this.handleSubmit} id={this.id} state={this.state} />
     }
 
     return (
@@ -116,7 +125,6 @@ class App extends Component {
 
 
 function Form1(props) {
-  console.log(props, `BEFORE RETURN`)
   return (
     <div>
       <form id="Form1" onSubmit={props.handleSubmit} >
@@ -195,10 +203,69 @@ function Form3(props) {
 }
 
 function Summary(props) {
+  const { name, email, password, addresslineone, addresslinetwo, city, state, zip_code, creditcard_number, expirationdate, cvv, billing_zipcode } = props.state;
+  console.log(props);
   return (
     <div>
-      <h1>This is the end of the checkout</h1>
-      <button>Complete Order</button>
+      <h1>Please confirm your order</h1>
+
+      <table>
+        <tr>
+          <th>Name</th>
+          <td>{name}</td>
+        </tr>
+        <tr>
+          <th>Email</th>
+          <td>{email}</td>
+        </tr>
+        <tr>
+          <th>Password</th>
+          <td>{password}</td>
+        </tr>
+      </table>
+
+      <table >
+        <tr>
+          <th>Address</th>
+          <td>{addresslineone}</td>
+        </tr>
+        <tr>
+          <th>Adress Line 2</th>
+          <td>{addresslinetwo}</td>
+        </tr>
+        <tr>
+          <th>City</th>
+          <td>{city}</td>
+        </tr>
+        <tr>
+          <th>State</th>
+          <td>{state}</td>
+        </tr>
+        <tr>
+          <th>Zip</th>
+          <td>{zip_code}</td>
+        </tr>
+      </table>
+
+      <table>
+        <tr>
+          <th>CreditCard</th>
+          <td>{creditcard_number}</td>
+        </tr>
+        <tr>
+          <th>Expiration Date</th>
+          <td>{expirationdate}</td>
+        </tr>
+        <tr>
+          <th>CVV</th>
+          <td>{cvv}</td>
+        </tr>
+        <tr>
+          <th>Billing Zip</th>
+          <td>{billing_zipcode}</td>
+        </tr>
+      </table>
+      <button name="Summary" onClick={props.handleSubmit}>Complete Order</button>
     </div>
   )
 }
